@@ -1,0 +1,50 @@
+[
+  {
+    "id": "BSI-SYS-1.3-TLS-DEP",
+    "type": "BSI",
+    "title_en": "Deprecated TLS protocol detected",
+    "title_de": "Veraltetes TLS-Protokoll erkannt",
+    "description_en": "TLS 1.0 or TLS 1.1 detected — conflicts with BSI IT-Grundschutz recommendations for modern encryption.",
+    "description_de": "TLS 1.0 oder TLS 1.1 erkannt — widerspricht den BSI IT-Grundschutz-Empfehlungen für moderne Verschlüsselung.",
+    "severity": "high",
+    "check": "tls_deprecated",
+    "recommendation_en": "Disable TLS 1.0/1.1, enable TLS 1.2+ and strong ciphers.",
+    "recommendation_de": "TLS 1.0/1.1 deaktivieren, TLS 1.2+ und starke Chiffren aktivieren."
+  },
+  {
+    "id": "BSI-SYS-1.3-OPEN-PORT",
+    "type": "BSI",
+    "title_en": "Open high-risk port detected",
+    "title_de": "Offener Hochrisiko-Port erkannt",
+    "description_en": "An exposed service on a high-risk port (e.g., FTP, Telnet, SMB) was discovered.",
+    "description_de": "Ein offener Dienst auf einem Hochrisiko-Port (z. B. FTP, Telnet, SMB) wurde entdeckt.",
+    "severity": "high",
+    "check": "open_high_port",
+    "recommendation_en": "Close or firewall access to the port, or migrate to secure alternatives.",
+    "recommendation_de": "Port schließen oder den Zugriff über eine Firewall einschränken bzw. auf sichere Alternativen migrieren."
+  },
+  {
+    "id": "GDPR-UNENCRYPTED-PII",
+    "type": "GDPR",
+    "title_en": "Potential unencrypted PII transmission",
+    "title_de": "Mögliche unverschlüsselte Übertragung personenbezogener Daten",
+    "description_en": "HTTP endpoints without HSTS or plain HTTP may transmit PII unencrypted, posing GDPR risk.",
+    "description_de": "HTTP-Endpunkte ohne HSTS oder unverschlüsseltes HTTP können personenbezogene Daten unverschlüsselt übertragen und ein DSGVO-Risiko darstellen.",
+    "severity": "high",
+    "check": "no_hsts_or_http",
+    "recommendation_en": "Enable HTTPS, HSTS and ensure all PII is transmitted over encrypted channels.",
+    "recommendation_de": "HTTPS und HSTS aktivieren und sicherstellen, dass alle personenbezogenen Daten über verschlüsselte Kanäle übertragen werden."
+  },
+  {
+    "id": "GDPR-CERT-EXPIRED",
+    "type": "GDPR",
+    "title_en": "Expired or invalid certificate",
+    "title_de": "Abgelaufenes oder ungültiges Zertifikat",
+    "description_en": "The SSL/TLS certificate is expired or invalid which may expose user data to risk under GDPR.",
+    "description_de": "Das SSL/TLS-Zertifikat ist abgelaufen oder ungültig, was die Benutzerdaten gemäß DSGVO riskieren kann.",
+    "severity": "high",
+    "check": "cert_expired",
+    "recommendation_en": "Renew or fix the certificate immediately and validate certificate chain.",
+    "recommendation_de": "Zertifikat sofort erneuern oder reparieren und die Zertifikatskette validieren."
+  }
+]

@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+python-nmap
+requests
+weasyprint
+Jinja2
+python-jose[cryptography]
+passlib[argon2]
+python-multipart
+psycopg2-binary
+redis

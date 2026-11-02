@@ -1,0 +1,54 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: aisca
+      POSTGRES_USER: aisca
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "127.0.0.1:6380:6379"
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+    environment:
+      AISCA_DB_PATH: /data/scans.db
+      REDIS_URL: redis://redis:6379/0
+      AISCA_ADMIN_USER: ${AISCA_ADMIN_USER:?Set AISCA_ADMIN_USER in .env}
+      AISCA_ADMIN_PASS: ${AISCA_ADMIN_PASS:?Set AISCA_ADMIN_PASS in .env}
+      AISCA_SECRET_KEY: ${AISCA_SECRET_KEY:?Set AISCA_SECRET_KEY in .env}
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - ./backend:/app
+      - backend_data:/data
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  backend_data:

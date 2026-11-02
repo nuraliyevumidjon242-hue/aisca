@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="static/report.css">
+</head>
+<body>
+  <header>
+    <img src="static/logo.svg" alt="AISCA logo" />
+    <div>
+      <h1>{{ strings.title }}</h1>
+      <div class="meta">{{ strings.report_for }}: <strong>{{ target }}</strong> &nbsp;|&nbsp; {{ strings.generated }}: {{ timestamp }}</div>
+    </div>
+  </header>
+
+  <div class="section card">
+    <div class="score"><strong>{{ strings.security_score }}:</strong> {{ score }}/100</div>
+    <div style="margin-top:8px;">{{ strings.findings_summary }}: <strong>{{ high }}</strong> {{ strings.high }}, <strong>{{ medium }}</strong> {{ strings.medium }}, <strong>{{ low }}</strong> {{ strings.low }}</div>
+  </div>
+
+  <div class="section">
+    <h2>{{ strings.detailed_findings }}</h2>
+
+    {% if nmap_hosts %}
+      {% for host in nmap_hosts %}
+        <div class="card"><strong>{{ strings.host }}:</strong> {{ host.host }} ({{ host.state }})
+        <ul>
+          {% for p in host.ports %}
+            <li class="finding {{ p.risk }}">{{ strings.port }} {{ p.port }}/{{ p.protocol }} — {{ p.name or '' }} {{ p.product or '' }} {{ p.version or '' }} ({{ strings.state }}: {{ p.state }}) [{{ strings.risk }}: {{ p.risk }}]
+              {% if p.risk == 'high' %}
+                <div class="high">{{ strings.bsi_open_port }}</div>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="card">{{ strings.no_network_results }}</div>
+    {% endif %}
+  </div>
+
+  <div class="section">
+    <h2>{{ strings.ssl_audit }}</h2>
+    <div class="card">
+    {% if ssl %}
+      {% if ssl.cert and (ssl.cert.valid is defined and not ssl.cert.valid) %}
+        <div class="high">{{ strings.cert_error }}: {{ ssl.cert.error }}</div>
+      {% else %}
+        {% if ssl.cert and ssl.cert.notAfter %}
+          <div>{{ strings.cert_expires }}: {{ ssl.cert.notAfter }} ({{ ssl.cert.days_left }} {{ strings.days }})</div>
+        {% endif %}
+      {% endif %}
+
+      {% if ssl.headers and ssl.headers.missing_headers and ssl.headers.missing_headers|length > 0 %}
+        <div class="high">{{ strings.missing_headers }}: {{ ssl.headers.missing_headers|join(', ') }}</div>
+      {% else %}
+        <div>{{ strings.headers_ok }}</div>
+      {% endif %}
+
+    {% else %}
+      <div>{{ strings.no_ssl_info }}</div>
+    {% endif %}
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Compliance Mapping</h2>
+    <div class="card">
+      {% if matched_rules and matched_rules|length > 0 %}
+        <ul>
+          {% for mr in matched_rules %}
+            <li style="margin-bottom:8px">
+              <strong>{{ mr.id }} — {{ mr.title }}</strong> <em>({{ mr.type }} / {{ mr.severity }})</em>
+              <div style="margin-top:4px">{{ mr.description }}</div>
+              {% if mr.evidence %}
+                <div style="margin-top:6px; font-size: 12px; color: #374151">Evidence:
+                  {% if mr.evidence.ports %}
+                    Ports: {{ mr.evidence.ports|join(', ') }}
+                  {% elif mr.evidence.headers %}
+                    Headers: {{ mr.evidence.headers }}
+                  {% elif mr.evidence.cert %}
+                    Cert: {{ mr.evidence.cert }}
+                  {% else %}
+                    {{ mr.evidence }}
+                  {% endif %}
+                </div>
+              {% endif %}
+              <div style="margin-top:6px"><strong>Recommendation:</strong> {{ mr.recommendation }}</div>
+            </li>
+          {% endfor %}
+        </ul>
+        <hr/>
+        <h3>Related CVEs</h3>
+        <div>
+          {% set any_cve = false %}
+          {% for host in nmap_hosts %}
+            {% for p in host.ports %}
+              {% if p.cves and p.cves|length > 0 %}
+                {% set any_cve = true %}
+                <div style="margin-top:8px"><strong>{{ host.host }} — Port {{ p.port }}/{{ p.protocol }} ({{ p.name or '' }} {{ p.version or '' }})</strong>
+                  <ul>
+                    {% for c in p.cves %}
+                      <li>{{ c.id }} — {{ c.description }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+          {% if not any_cve %}
+            <div>No CVEs matched for the detected services/versions (best-effort lookup via NVD).</div>
+          {% endif %}
+        </div>
+      {% else %}
+        <div>No compliance matches were detected for this scan.</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>{{ strings.recommendations }}</h2>
+    <div class="card">
+    <ul>
+      {% for r in recommendations %}
+        <li>{{ r }}</li>
+      {% endfor %}
+    </ul>
+    </div>
+  </div>
+
+  <footer>
+    {{ strings.generated_by }} — {{ gen_time }}
+  </footer>
+</body>
+</html>

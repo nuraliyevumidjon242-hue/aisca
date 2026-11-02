@@ -1,0 +1,3 @@
+/* Minimal styles for the frontend MVP */
+html,body,#__next { height: 100%; }
+body { margin: 0; background: #f8fafc; color: #0f172a; }

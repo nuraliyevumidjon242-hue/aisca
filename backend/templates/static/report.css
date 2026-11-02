@@ -1,0 +1,17 @@
+/* Report styles for WeasyPrint */
+body { font-family: DejaVu Sans, Arial, sans-serif; color: #0f172a; margin: 0; padding: 24px; background: #fff }
+header { display:flex; align-items: center; gap: 12px; border-bottom: 1px solid #e6edf3; padding-bottom: 12px; margin-bottom: 14px }
+header img { height: 48px }
+header h1 { font-size: 20px; margin: 0 }
+.meta { font-size: 11px; color: #374151 }
+.score { background: linear-gradient(90deg,#f1f5f9,#eef2ff); padding: 8px; display:inline-block; border-radius: 6px; font-weight: 600 }
+.card { border: 1px solid #e6edf3; padding: 10px; border-radius: 6px; margin-bottom: 8px; background: #fafafa }
+.finding { margin: 6px 0; }
+.high { color: #b91c1c; }
+.medium { color: #b45309; }
+.low { color: #065f46; }
+.section { margin-top: 14px }
+h2 { font-size: 14px; margin: 0 0 8px 0 }
+footer { border-top: 1px solid #e6edf3; margin-top: 22px; padding-top: 8px; font-size: 10px; color: #6b7280 }
+ul { padding-left: 18px }
+@page { size: A4; margin: 20mm }
