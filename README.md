@@ -4,6 +4,8 @@ AISCA is a portfolio-stage security assessment platform that combines network
 service discovery, basic TLS and HTTP-header checks, heuristic log analysis,
 and bilingual PDF reporting in a web dashboard.
 
+[Download the English project presentation](./AISCA_Project_Overview.pptx).
+
 > **Scope and safety:** Use only against systems you own or are explicitly
 > authorized to assess. AISCA is an MVP, not a penetration-testing suite,
 > compliance certification, or production-ready security product.
