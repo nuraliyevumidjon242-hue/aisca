@@ -29,7 +29,7 @@ and bilingual PDF reporting in a web dashboard.
 
 - Python 3.11+, FastAPI, SQLite, optional Redis cache
 - Nmap and `python-nmap`
-- Next.js 13, React 18, Chart.js
+- Next.js 16, React 19, Chart.js
 - WeasyPrint/Jinja2 for PDF generation
 - Docker Compose for local development
 
